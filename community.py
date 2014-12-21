@@ -11,13 +11,8 @@ def player_profile(steam_id64):
         url = "http://steamcommunity.com/profiles/%s/?xml=1" % steam_id64
     else:
         url = ""
-    http = httplib2.Http()
-    response, content = http.request(url, "GET")
-    if response["status"][0] != "2":
-        return None
-    try:
-        profile_et = ElementTree.fromstring(content)
-    except RuntimeError:
+    profile_et = http_xml_et(url)
+    if profile_et is None:
         return None
     profile = {}
     for entry in profile_et.getchildren():
@@ -62,24 +57,47 @@ def player_friends_list(steam_id64):
         url = "http://steamcommunity.com/profiles/%s/friends/?xml=1" % steam_id64
     else:
         url = ""
-    http = httplib2.Http()
-    response, content = http.request(url, "GET")
-    if response["status"][0] != "2":
-        return None
-    try:
-        profile_et = ElementTree.fromstring(content)
-    except RuntimeError:
+    xml_et = http_xml_et(url)
+    if xml_et is None:
         return None
     friends_et = None
-    for entry in profile_et.getchildren():
+    for entry in xml_et.getchildren():
         if entry.tag == "friends":
             friends_et = entry
     if friends_et is None:
         return []
     friends_list = []
-    for entry in friends_et:
+    for entry in friends_et.getchildren():
         friends_list.append(entry.text)
     return friends_list
+
+
+def player_games_list(steam_id64):
+    if isinstance(steam_id64, int):
+        url = "http://steamcommunity.com/profiles/%d/games/?xml=1" % steam_id64
+    elif isinstance(steam_id64, str):
+        url = "http://steamcommunity.com/profiles/%s/games/?xml=1" % steam_id64
+    else:
+        url = ""
+    xml_et = http_xml_et(url)
+    if xml_et is None:
+        return None
+    games_et = None
+    for entry in xml_et.getchildren():
+        if entry.tag == "games":
+            games_et = entry
+    games_list = []
+    for entry in games_et.getchildren():
+        tmp_dict = {}
+        for sub_entry in entry.getchildren():
+            if sub_entry.tag in ["appID", "hoursOnRecord", "hoursLast2Weeks"]:
+                tmp_dict[sub_entry.tag] = sub_entry.text
+        if "hoursOnRecord" not in tmp_dict:
+            tmp_dict["hoursOnRecord"] = 0
+        if "hoursLast2Weeks" not in tmp_dict:
+            tmp_dict["hoursLast2Weeks"] = 0
+        games_list.append((tmp_dict["appID"], tmp_dict["hoursOnRecord"], tmp_dict["hoursLast2Weeks"]))
+    return games_list
 
 
 def group_members_list(group_id):
@@ -89,21 +107,28 @@ def group_members_list(group_id):
         url = "http://steamcommunity.com/gid/%s/memberslistxml/?xml=1" % group_id
     else:
         url = ""
-    http = httplib2.Http()
-    response, content = http.request(url, "GET")
-    if response["status"][0] != "2":
-        return None
-    try:
-        profile_et = ElementTree.fromstring(content)
-    except RuntimeError:
+    xml_et = http_xml_et(url)
+    if xml_et is None:
         return None
     members_et = None
-    for entry in profile_et.getchildren():
+    for entry in xml_et.getchildren():
         if entry.tag == "members":
             members_et = entry
     if members_et is None:
         return []
     members_list = []
-    for entry in members_et:
+    for entry in members_et.getchildren():
         members_list.append(entry.text)
     return members_list
+
+
+def http_xml_et(url):
+    http = httplib2.Http()
+    response, content = http.request(url, "GET")
+    if response["status"][0] != "2":
+        return None
+    try:
+        xml_et = ElementTree.fromstring(content)
+        return xml_et
+    except RuntimeError:
+        return None
