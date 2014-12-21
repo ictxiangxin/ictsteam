@@ -27,8 +27,20 @@ def player_profile(steam_id):
                         ssub_dict[ssub_entry.tag] = ssub_entry.text
                     if sub_entry.tag == "mostPlayedGame":
                         ssub_dict["gameID"] = ssub_dict["gameLink"][ssub_dict["gameLink"].rindex("/") + 1:]
+                        if "hoursOnRecord" in ssub_dict:
+                            ssub_dict["hoursOnRecord"] = float(ssub_dict["hoursOnRecord"])
+                        if "hoursPlayed" in ssub_dict:
+                            ssub_dict["hoursPlayed"] = float(ssub_dict["hoursPlayed"])
                         sub_dict[ssub_dict["gameName"]] = ssub_dict
                     elif sub_entry.tag == "group":
+                        if "memberCount" in ssub_dict:
+                            ssub_dict["memberCount"] = int(ssub_dict["memberCount"])
+                        if "membersInChat" in ssub_dict:
+                            ssub_dict["membersInChat"] = int(ssub_dict["membersInChat"])
+                        if "membersInGame" in ssub_dict:
+                            ssub_dict["membersInGame"] = int(ssub_dict["membersInGame"])
+                        if "membersOnline" in ssub_dict:
+                            ssub_dict["membersOnline"] = int(ssub_dict["membersOnline"])
                         sub_dict[ssub_dict["groupID64"]] = ssub_dict
                     else:
                         sub_dict[sub_entry.tag] = ssub_dict
