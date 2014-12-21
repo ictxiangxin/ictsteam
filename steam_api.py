@@ -24,6 +24,7 @@ class SteamAPI:
         new_api_file_content = self.invoke_web_api("ISteamWebAPIUtil", "GetSupportedAPIList", 1)
         with open(self.__api_file, "wb") as fp:
             fp.write(new_api_file_content)
+        self.__init__()
 
     def invoke_web_api(self, interface, method, method_version, args=None):
         if interface in self.__api:

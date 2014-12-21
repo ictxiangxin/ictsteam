@@ -1,6 +1,6 @@
 __author__ = 'ict'
 
-from community import group_memberslist
+from ictsteam import group_members_list
 from pprint import pprint
 
-pprint(group_memberslist(103582791429521412))
+pprint(group_members_list(103582791429521412))
