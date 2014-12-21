@@ -7,7 +7,7 @@ import os
 
 class SteamAPI:
     def __init__(self):
-        self.__api_file = os.path.dirname(__file__) + "\\steam_web_api.json"
+        self.__api_file = os.path.dirname(__file__) + os.sep + "steam_web_api.json"
         self.__api_site = "http://api.steampowered.com/"
         self.__api_json = None
         with open(self.__api_file, "r") as fp:
