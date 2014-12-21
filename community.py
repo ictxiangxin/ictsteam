@@ -15,7 +15,10 @@ def player_profile(steam_id):
     response, content = http.request(url, "GET")
     if response["status"][0] != "2":
         return None
-    profile_et = ElementTree.fromstring(content)
+    try:
+        profile_et = ElementTree.fromstring(content)
+    except:
+        return None
     profile = {}
     for entry in profile_et.getchildren():
         if len(entry) > 0:
@@ -50,3 +53,30 @@ def player_profile(steam_id):
         else:
             profile[entry.tag] = entry.text
     return profile
+
+
+def group_memberslist(group_id):
+    if isinstance(group_id, int):
+        url = "http://steamcommunity.com/gid/%d/memberslistxml/?xml=1" % group_id
+    elif isinstance(group_id, str):
+        url = "http://steamcommunity.com/gid/%s/memberslistxml/?xml=1" % group_id
+    else:
+        url = ""
+    http = httplib2.Http()
+    response, content = http.request(url, "GET")
+    if response["status"][0] != "2":
+        return None
+    try:
+        profile_et = ElementTree.fromstring(content)
+    except:
+        return None
+    members_et = None
+    for entry in profile_et.getchildren():
+        if entry.tag == "members":
+            members_et = entry
+    if members_et is None:
+        return []
+    memberslist = []
+    for entry in members_et:
+        memberslist.append(entry.text)
+    return memberslist
