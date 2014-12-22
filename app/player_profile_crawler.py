@@ -62,6 +62,7 @@ if __name__ == "__main__":
                 group_id_set.add(group)
         json_dump(pr, profile_dir + pr["steamID64"] + ".json")
         profile_sum_now += 1
+        already_set.add(sid)
         print("%d/%d steamID64:%s steamID:%s" % (profile_sum_now, profile_sum, pr["steamID64"], pr["steamID"]))
     print("Done")
     print("Profile: %d, SteamID: %d, GroupID: %d" % (profile_sum_now, len(steam_id64_set), len(group_id_set)))

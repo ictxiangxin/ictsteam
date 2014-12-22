@@ -125,7 +125,10 @@ def group_members_list(group_id):
 def http_xml_et(url):
     http = httplib2.Http()
     try:
-        response, content = http.request(url, "GET")
+        try:
+            response, content = http.request(url, "GET")
+        except httplib2.ServerNotFoundError:
+            return None
         if response["status"][0] != "2":
             return None
         xml_et = ElementTree.fromstring(content)
