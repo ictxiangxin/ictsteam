@@ -1,10 +1,7 @@
 __author__ = 'ict'
 
-import os
 import pickle
-from ictsteam import player_small_profile
-from ictsteam import group_members_list
-from ictsteam import json_dump
+from ictsteam import *
 
 profile_dir = "d:/steam_profile"
 steam_id64 = "76561198118637711"
@@ -12,6 +9,8 @@ group_id = ""
 profile_sum = 50000
 save_step = 100
 save_file = "crawler.save"
+get_all_games = True
+get_friends = True
 
 if __name__ == "__main__":
     already_set = set()
@@ -54,7 +53,7 @@ if __name__ == "__main__":
         sid = steam_id64_set.pop()
         if sid in already_set:
             continue
-        pr = player_small_profile(sid)
+        pr = player_small_profile(sid, get_friends, get_all_games)
         if pr is None:
             continue
         group_list = pr["group"]

@@ -9,7 +9,7 @@ def json_dump(profile, filename):
         json.dump(profile, fp, indent=True)
 
 
-def player_small_profile(steam_id64):
+def player_small_profile(steam_id64, get_friends=True, get_all_games=True):
     profile = player_profile(steam_id64)
     if profile is None:
         return None
@@ -29,6 +29,14 @@ def player_small_profile(steam_id64):
     if "mostPlayedGames" in profile:
         for _, game in profile["mostPlayedGames"].items():
             small_profile["game"].append((game["gameID"], game["hoursOnRecord"], game["hoursPlayed"]))
+    if get_friends:
+            friends = player_friends_list(steam_id64)
+            if friends is not None:
+                small_profile["friend"] = friends
+    if get_all_games:
+        games = player_games_list(steam_id64)
+        if games is not None:
+            small_profile["game"] = games
     return small_profile
 
 
