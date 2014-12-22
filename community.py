@@ -127,7 +127,9 @@ def http_xml_et(url):
     try:
         try:
             response, content = http.request(url, "GET")
-        except httplib2.ServerNotFoundError:
+        except TimeoutError:
+            return None
+        except httplib2:
             return None
         if response["status"][0] != "2":
             return None

@@ -7,7 +7,7 @@ profile_dir = "d:/steam_profile"
 steam_id64 = "76561198118637711"
 group_id = ""
 profile_sum = 50000
-save_step = 100
+save_step = 20
 save_file = "crawler.save"
 get_all_games = True
 get_friends = True
@@ -30,15 +30,15 @@ if __name__ == "__main__":
             already_set.add(filename[:-5])
         if os.path.exists(profile_dir + save_file):
             with open(profile_dir + save_file, "rb") as fp:
-                steam_id64_set, group_id_set = pickle.load(fp)
+                profile_sum_now, steam_id64_set, group_id_set = pickle.load(fp)
     profile_sum_now = 0
     save_step_now = 0
-    while (len(steam_id64_set) != 0 or len(group_id_set) != 0) and profile_sum_now != profile_sum:
+    while (len(steam_id64_set) != 0 or len(group_id_set) != 0) and profile_sum_now < profile_sum:
         save_step_now += 1
         if save_step_now == save_step:
             save_step_now = 0
             with open(profile_dir + save_file, "wb") as fp:
-                pickle.dump((steam_id64_set, group_id_set), fp)
+                pickle.dump((profile_sum_now, steam_id64_set, group_id_set), fp)
         while len(steam_id64_set) == 0:
             if len(group_id_set) == 0:
                 break
@@ -56,6 +56,9 @@ if __name__ == "__main__":
         pr = player_small_profile(sid, get_friends, get_all_games)
         if pr is None:
             continue
+        if "friend" in pr:
+            for one_friend in pr["friend"]:
+                steam_id64_set.add(one_friend)
         group_list = pr["group"]
         if len(group_id_set) <= 1024 * 1024:
             for group in group_list:

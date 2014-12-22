@@ -35,7 +35,12 @@ class SteamAPI:
                     uri += "?" + str(args)[1:-1].replace("\'", "").replace(": ", "=").replace(", ", "&")
                 http = httplib2.Http()
                 url = self.__api_site + uri
-                response, content = http.request(url, http_method)
+                try:
+                    response, content = http.request(url, http_method)
+                except TimeoutError:
+                    return None
+                except httplib2:
+                    return None
                 if response["status"][0] == "2":
                     return content
         return None
