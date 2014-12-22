@@ -124,10 +124,10 @@ def group_members_list(group_id):
 
 def http_xml_et(url):
     http = httplib2.Http()
-    response, content = http.request(url, "GET")
-    if response["status"][0] != "2":
-        return None
     try:
+        response, content = http.request(url, "GET")
+        if response["status"][0] != "2":
+            return None
         xml_et = ElementTree.fromstring(content)
         return xml_et
     except RuntimeError:
