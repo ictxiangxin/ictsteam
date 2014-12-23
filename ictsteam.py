@@ -43,3 +43,14 @@ def player_small_profile(steam_id64, get_friends=True, get_all_games=True):
 def update_local_steam_api():
     tmp_steam_api = SteamAPI()
     tmp_steam_api.update_api_file()
+
+
+def steam_game_dict(api=None):
+    if api is None:
+        api = SteamAPI()
+    game_list_json = json.loads(api.invoke_web_api("ISteamApps", "GetAppList", "2").decode("utf8"))
+    game_list_json = game_list_json["applist"]["apps"]
+    game_dict = {}
+    for game_info in game_list_json:
+        game_dict[game_info["appid"]] = game_info["name"]
+    return game_dict

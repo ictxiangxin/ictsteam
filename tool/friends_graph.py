@@ -20,8 +20,8 @@ if __name__ == "__main__":
     if close_loop:
         lock_id = set([filename[:-5] for filename in os.listdir(profile_dir)])
     for filename in os.listdir(profile_dir):
-        print("Parsing: %s" % filename)
         if filename[-5:] == ".json":
+            print("Parsing: %s" % filename)
             with open(profile_dir + filename, "r") as fp:
                 pr = json.load(fp)
             sid = pr["steamID64"]
