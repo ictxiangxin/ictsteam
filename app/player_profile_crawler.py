@@ -87,9 +87,11 @@ if __name__ == "__main__":
             group_done_set.add(gid)
         if len(steam_id64_dict) == 0:
             continue
+        level = 0
         for l in range(player_priority_level - 1, -1, -1):
             if len(player_level_set[l]) > 0:
                 sid = player_level_set[l].pop()
+                level = l
                 del steam_id64_dict[sid]
                 break
         pr = player_small_profile(sid, get_friends, get_all_games)
@@ -119,6 +121,6 @@ if __name__ == "__main__":
         json_dump(pr, profile_dir + pr["steamID64"] + ".json")
         profile_sum_now += 1
         player_done_set.add(sid)
-        print("%d/%d steamID64:%s steamID:%s" % (profile_sum_now, profile_sum, pr["steamID64"], pr["steamID"]))
+        print("%d level:%d steamID64:%s steamID:%s" % (profile_sum_now, level, pr["steamID64"], pr["steamID"]))
     print("Done")
     print("Profile: %d, SteamID: %d, GroupID: %d" % (profile_sum_now, len(steam_id64_dict), len(group_id_dict)))
