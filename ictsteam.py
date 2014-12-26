@@ -25,10 +25,10 @@ def player_small_profile(steam_id64, get_friends=True, get_all_games=True):
         small_profile["group"] = list(profile["groups"])
     else:
         small_profile["group"] = []
-    small_profile["game"] = []
+    small_profile["mostgame"] = []
     if "mostPlayedGames" in profile:
         for _, game in profile["mostPlayedGames"].items():
-            small_profile["game"].append((game["gameID"], game["hoursOnRecord"], game["hoursPlayed"]))
+            small_profile["mostgame"].append((game["gameID"], game["hoursOnRecord"], game["hoursPlayed"]))
     if get_friends:
             friends = player_friends_list(steam_id64)
             if friends is not None:
