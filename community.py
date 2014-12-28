@@ -96,6 +96,8 @@ def player_games_list(steam_id64):
             tmp_dict["hoursOnRecord"] = 0
         if "hoursLast2Weeks" not in tmp_dict:
             tmp_dict["hoursLast2Weeks"] = 0
+            tmp_dict["hoursOnRecord"] = float(tmp_dict["hoursOnRecord"].replace(",", ""))
+            tmp_dict["hoursLast2Weeks"] = float(tmp_dict["hoursLast2Weeks"].replace(",", ""))
         games_list.append((tmp_dict["appID"], tmp_dict["hoursOnRecord"], tmp_dict["hoursLast2Weeks"]))
     return games_list
 
