@@ -93,9 +93,9 @@ def player_games_list(steam_id64):
             if sub_entry.tag in ["appID", "hoursOnRecord", "hoursLast2Weeks"]:
                 tmp_dict[sub_entry.tag] = sub_entry.text
         if "hoursOnRecord" not in tmp_dict:
-            tmp_dict["hoursOnRecord"] = 0
+            tmp_dict["hoursOnRecord"] = "0"
         if "hoursLast2Weeks" not in tmp_dict:
-            tmp_dict["hoursLast2Weeks"] = 0
+            tmp_dict["hoursLast2Weeks"] = "0"
             tmp_dict["hoursOnRecord"] = float(tmp_dict["hoursOnRecord"].replace(",", ""))
             tmp_dict["hoursLast2Weeks"] = float(tmp_dict["hoursLast2Weeks"].replace(",", ""))
         games_list.append((tmp_dict["appID"], tmp_dict["hoursOnRecord"], tmp_dict["hoursLast2Weeks"]))
@@ -138,4 +138,6 @@ def http_xml_et(url):
         xml_et = ElementTree.fromstring(content)
         return xml_et
     except RuntimeError:
+        return None
+    except ElementTree.ParseError:
         return None
